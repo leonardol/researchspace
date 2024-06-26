@@ -28,61 +28,61 @@
           <li>
             <bs-dropdown id="navbar-dropdown">
               <bs-dropdown-toggle>
-                <div>Create</div>
+                <div>{{i18n "create" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
               </bs-dropdown-toggle>
               <bs-dropdown-menu>
                 <div class="dropdown-sectionTitle">
-                  ResearchSpace tools
+                  {{i18n "researchSpace-tools" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}
                 </div>
                 <div class="dropdown-grid-container">
-                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames" 
+                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames"
                                             urlqueryparam-view='semantic-narrative'>
                     <bs-menu-item>
                       <div class="dropdown-item-iconContainer">
                         <rs-icon icon-type="round" icon-name="description" style="color: #ffb450;"></rs-icon>
                       </div>
                       <div>
-                        <div class="dropdown-item-title">Semantic narrative</div>
-                        <div class="dropdown-item-description">Compose and share your research through an evolving narrative.</div>
+                        <div class="dropdown-item-title">{{i18n "header-tools-semantic-narratives-title" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
+                        <div class="dropdown-item-description">{{i18n "header-tools-semantic-narratives-description" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
                       </div>
                     </bs-menu-item>
                   </semantic-link-container>
 
-                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames" 
+                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames"
                                             urlqueryparam-view='knowledge-map'>
                     <bs-menu-item>
                       <div class="dropdown-item-iconContainer">
                         <rs-icon icon-type="round" icon-name="account_tree" style="color: #ff7f66;"></rs-icon>
                       </div>
                       <div>
-                        <div class="dropdown-item-title">Knowledge Map</div>
-                        <div class="dropdown-item-description">Express research thinking and processes as networks of relations.</div>
+                        <div class="dropdown-item-title">{{i18n "header-tools-knowledge-map-title" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
+                        <div class="dropdown-item-description">{{i18n "header-tools-knowledge-map-description" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
                       </div>
                     </bs-menu-item>
                   </semantic-link-container>
 
-                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames" 
+                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames"
                                             urlqueryparam-view='vocabulary'>
                     <bs-menu-item>
                       <div class="dropdown-item-iconContainer">
                         <i class="iconmoon iconmoon-books" style="color: #10BC7A;"></i>
                       </div>
                       <div>
-                        <div class="dropdown-item-title">Vocabularies/Authorities</div>
-                        <div class="dropdown-item-description">Create, view and edit vocabulary / authority list of terms.</div>
+                        <div class="dropdown-item-title">{{i18n "header-tools-vocabularies-title" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
+                        <div class="dropdown-item-description">{{i18n "header-tools-vocabularies-description" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
                       </div>
                     </bs-menu-item>
                   </semantic-link-container>
 
-                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames" 
+                  <semantic-link-container uri="http://www.researchspace.org/resource/ThinkingFrames"
                                             urlqueryparam-view='vocabulary'>
                     <bs-menu-item>
                       <div class="dropdown-item-iconContainer">
                         <rs-icon icon-type="round" icon-name="image" style="color: #55A6FF;"></rs-icon>
                       </div>
                       <div>
-                        <div class="dropdown-item-title">Image view and annotation</div>
-                        <div class="dropdown-item-description">View, compare and annotate high-resolution images.</div>
+                        <div class="dropdown-item-title">{{i18n "header-tools-image-title" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
+                        <div class="dropdown-item-description">{{i18n "header-tools-image-description" bundle="org/researchspace/apps/default/assets/i18n/messages" locale=lang}}</div>
                       </div>
                     </bs-menu-item>
                   </semantic-link-container> 
