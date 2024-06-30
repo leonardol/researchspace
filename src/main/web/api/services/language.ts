@@ -22,6 +22,12 @@ import { Rdf } from 'platform/api/rdf';
 
 import { ConfigHolder } from 'platform/api/services/config-holder';
 
+import { getLanguage } from 'platform/api/services/resource-language';
+
+import { SparqlClient, SparqlUtil } from 'platform/api/sparql';
+import { SparqlQueryForm } from 'platform/api/sparql/SparqlClient';
+import * as SparqlJs from 'sparqljs';
+
 const LS_LANGUAGE_PREFERENCES_KEY = 'preferredLanguage';
 const DEFAULT_LANGUAGE = 'en';
 
@@ -44,6 +50,25 @@ export function getPreferredUserLanguage(): string {
 }
 
 export function setPreferredUserLanguage(bcp47LanguageTag: string | undefined) {
+  const preferences = LanguagePreferences.get(LS_LANGUAGE_PREFERENCES_KEY) || {};
+  if (typeof preferences.userLanguageTag === 'string') {
+    let query = `DELETE {
+      <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${preferences.userLanguageTag}" .
+    }
+    INSERT {
+      <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${bcp47LanguageTag}" .
+    }
+    WHERE {
+      <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${preferences.userLanguageTag}" .
+    }`
+    console.log(query);
+    SparqlClient.executeSparqlUpdate(SparqlUtil.parseQuery(query) as SparqlJs.Update, { context: { prettyPrint: true }})
+    .onValue((v) => {
+    })
+    .onError((e: Error) => {
+    });
+  }
+  
   LanguagePreferences.update(LS_LANGUAGE_PREFERENCES_KEY, {
     userLanguageTag: bcp47LanguageTag,
   });
@@ -62,6 +87,13 @@ function getOrComputePreferences(): typeof computedPreferences {
 }
 
 function readPreferredUserLanguage() {
+  getLanguage(Rdf.iri("http://www.researchspace.org/resource/user/admin"))
+    .onValue((language) => {
+      setPreferredUserLanguage(language);
+    })
+    .onError((e) => {
+      console.log(e);
+    });
   const preferences = LanguagePreferences.get(LS_LANGUAGE_PREFERENCES_KEY) || {};
   if (typeof preferences.userLanguageTag === 'string') {
     return preferences.userLanguageTag;

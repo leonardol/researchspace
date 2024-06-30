@@ -40,6 +40,7 @@ import org.researchspace.data.rdf.container.LDPAssetsLoader;
 import org.researchspace.data.rdf.container.LDPImplManager;
 import org.researchspace.data.rdf.container.PermissionsAwareLDPApiRegistry;
 import org.researchspace.federation.repository.MpSparqlServiceRegistry;
+import org.researchspace.language.LanguageCache;
 import org.researchspace.querycatalog.QueryCatalogRESTServiceRegistry;
 import org.researchspace.repository.RepositoryManager;
 import org.researchspace.security.ShiroTextRealm;
@@ -102,6 +103,7 @@ public class MainGuiceModule extends AbstractModule {
         bind(DefaultThumbnailService.class).asEagerSingleton();
         bind(FieldDefinitionManager.class).in(Singleton.class);
         bind(FieldsBasedSearch.class).in(Singleton.class);
+        bind(LanguageCache.class).in(Singleton.class);
 
         bind(LDPImplManager.class).in(Singleton.class);
         bind(LDPAssetsLoader.class).in(Singleton.class);

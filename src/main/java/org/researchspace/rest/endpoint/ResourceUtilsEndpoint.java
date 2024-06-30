@@ -42,6 +42,8 @@ import org.eclipse.rdf4j.model.util.Literals;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryException;
 import org.researchspace.cache.LabelCache;
+import org.researchspace.config.NamespaceRegistry;
+import org.researchspace.language.LanguageCache;
 import org.researchspace.repository.RepositoryManager;
 import org.researchspace.rest.feature.CacheControl.NoCache;
 import org.researchspace.thumbnails.ThumbnailServiceRegistry;
@@ -67,7 +69,13 @@ public class ResourceUtilsEndpoint {
     private ThumbnailServiceRegistry thumbnailServiceRegistry;
 
     @Inject
+    private LanguageCache languageCache;
+
+    @Inject
     private RepositoryManager repositoryManager;
+
+    @Inject
+    private NamespaceRegistry ns;
 
     @POST
     @Path("getLabelsForRdfValue")
@@ -151,5 +159,44 @@ public class ResourceUtilsEndpoint {
             return Response.ok(stream);
         }).orElse(Response.status(Response.Status.NOT_FOUND)
                 .entity(String.format("\"Thumbnail service '%s' not found.\"", service))).build();
+    }
+
+    @POST
+    @Path("getLanguages")
+    @Produces(APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
+    public Response getLanguages(@QueryParam("repository") final Optional<String> repositoryId, final JsonParser jp)
+            throws IOException, RepositoryException {
+        Repository repo = repositoryManager.getRepository(repositoryId).orElse(repositoryManager.getDefault());
+        StreamingOutput stream = new StreamingOutput() {
+            @Override
+            public void write(OutputStream os) throws IOException, WebApplicationException {
+                JsonFactory jsonFactory = new JsonFactory();
+                try (JsonGenerator output = jsonFactory.createGenerator(os)) {
+                    output.writeStartObject();
+
+                    Map<IRI, String> iriToUriString = readResourceIris(jp);
+
+                    //TODO this is a workaround. This service will be replaced with a convenient service to get the user
+                    // language see the getLabelsForRdfValue method
+                    Set<IRI> iris = new HashSet<>();
+                    iris.add(ns.getUserIRI());
+
+                    Map<IRI, Optional<Literal>> labelMap = languageCache.getLanguage(iris, repo);
+                    // write final bulk
+                    for (IRI iri : labelMap.keySet()) {
+                        Optional<Literal> label = labelMap.get(iri);
+                        //TODO this is a workaoround. This service will be replaced with a convenient service to get the user
+                        // language see the getLabelsForRdfValue method
+                        output.writeStringField(ns.getUserIRI().stringValue(),
+                                LabelCache.resolveLabelWithFallback(label, iri));
+                    }
+
+                    // clear temp data structures
+                    output.writeEndObject();
+                }
+            }
+        };
+        return Response.ok(stream).build();
     }
 }
