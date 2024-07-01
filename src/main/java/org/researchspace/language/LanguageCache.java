@@ -79,4 +79,8 @@ public class LanguageCache {
         cache.getAll(repository, resourceIris).forEach((key, literal) -> result.put(key, literal));
         return result;
     }
+
+    public void invalidate() {
+        cache.invalidate();
+    }
 }

@@ -25,6 +25,16 @@ import { refresh } from 'platform/api/navigation';
 import { ConfigHolder, UIConfig } from 'platform/api/services/config-holder';
 import { getPreferredUserLanguage, setPreferredUserLanguage } from 'platform/api/services/language';
 
+import { BrowserPersistence } from 'platform/components/utils';
+import { SparqlClient, SparqlUtil } from 'platform/api/sparql';
+import * as SparqlJs from 'sparqljs';
+
+const LS_LANGUAGE_PREFERENCES_KEY = 'preferredLanguage';
+
+const LanguagePreferences = BrowserPersistence.adapter<{
+  userLanguageTag?: string;
+}>();
+
 interface UserLanguagePropsProps {
   /**
    * Language tags that the user is able to choose from
@@ -97,9 +107,27 @@ export class UserLanguageSwitch extends Component<UserLanguagePropsProps, State>
   }
 
   private onLanguageChanged(language: string): void {
-    setPreferredUserLanguage(language);
-    this.setState({ language: language });
-    window.location.reload();
+    const preferences = LanguagePreferences.get(LS_LANGUAGE_PREFERENCES_KEY) || {};
+    if (typeof preferences.userLanguageTag === 'string') {
+      let query = `DELETE {
+        <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${preferences.userLanguageTag}" .
+      }
+      INSERT {
+        <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${language}" .
+      }
+      WHERE {
+        <http://www.researchspace.org/resource/user/admin> <http://www.researchspace.org/resource/hasLanguage> "${preferences.userLanguageTag}" .
+      }`
+      console.log(query);
+      SparqlClient.executeSparqlUpdate(SparqlUtil.parseQuery(query) as SparqlJs.Update, { context: { prettyPrint: true }})
+      .onValue((v) => {
+        setPreferredUserLanguage(language);
+        this.setState({ language: language });
+        window.location.reload();
+      })
+      .onError((e: Error) => {
+      });
+    }
   }
 }
 

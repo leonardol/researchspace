@@ -70,6 +70,7 @@ import org.researchspace.api.sparql.SparqlUtil.SparqlOperation;
 import org.researchspace.config.NamespaceRegistry;
 import org.researchspace.data.rdf.PrettyPrintTurtleWriter;
 import org.researchspace.di.MainGuiceModule.MainTemplateProvider;
+import org.researchspace.language.LanguageCache;
 import org.researchspace.repository.RepositoryManager;
 import org.researchspace.security.PermissionUtil;
 
@@ -98,6 +99,9 @@ public class SparqlServlet extends HttpServlet {
     @Inject
     private NamespaceRegistry nsRegistry;
 
+    @Inject
+    private LanguageCache languageCache;
+
     static class ContentType {
         static String FORM_URLENCODED = "application/x-www-form-urlencoded";
         static String SPARQL_QUERY = "application/sparql-query";
@@ -120,6 +124,7 @@ public class SparqlServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        languageCache.invalidate();
         ServletRequestUtil.traceLogRequest(req, logger);
         Optional<String> query = null;
         try {

@@ -20,8 +20,6 @@
 import { Rdf } from 'platform/api/rdf';
 import { QueryContext } from 'platform/api/sparql';
 
-import { getPreferredUserLanguage } from 'platform/api/services/language';
-
 import { BaseResourceService } from './BaseResourceService';
 
 const LANGUAGES_SERVICE_URL = '/rest/data/rdf/utils/getLanguages';
